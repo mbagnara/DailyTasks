@@ -14,13 +14,20 @@
         #task-form {
             background: #fff;
             padding: 15px;
-            max-width: 300px; /* Half the previous width */
+            max-width: 300px;
+            margin: 20px auto;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        #data-table {
+            background: #fff;
+            padding: 15px;
+            max-width: 600px;
             margin: 20px auto;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
         label {
             display: block;
-            margin-bottom: 4px; /* Half the previous margin */
+            margin-bottom: 4px;
             font-weight: bold;
         }
         input[type="text"],
@@ -28,14 +35,14 @@
         textarea,
         select {
             width: 100%;
-            padding: 4px; /* Half the previous padding */
-            margin-bottom: 10px; /* Half the previous margin */
+            padding: 4px;
+            margin-bottom: 10px;
             border: 1px solid #ddd;
-            font-size: 12px; /* Smaller font size */
+            font-size: 12px;
         }
         textarea {
             resize: vertical;
-            min-height: 50px; /* Half the previous min-height */
+            min-height: 50px;
         }
         .mandatory {
             color: red;
@@ -43,15 +50,18 @@
         input[type="submit"] {
             display: block;
             width: 100%;
-            padding: 5px; /* Half the previous padding */
+            padding: 5px;
             background-color: #007BFF;
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 9px; /* Smaller font size */
+            font-size: 9px;
         }
         input[type="submit"]:hover {
             background-color: #0056b3;
+        }
+        table {
+            width: 100%;
         }
     </style>
 </head>
@@ -79,30 +89,41 @@
         
         <input type="submit" value="Submit">
     </form>
+    
+    <div id="data-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Task</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Completion Date</th>
+                </tr>
+            </thead>
+            <tbody id="data-body"></tbody>
+        </table>
+    </div>
 
     <script>
-        // Set default value for date field
         document.getElementById('date').valueAsDate = new Date();
 
-        // Enable or disable the completion date based on status
         document.getElementById('status').addEventListener('change', function() {
             const status = this.value;
             const completionDateField = document.getElementById('completionDate');
 
             if (status === 'Completed') {
                 completionDateField.disabled = false;
-                completionDateField.valueAsDate = new Date(); // Set to today's date if status is 'Completed'
+                completionDateField.valueAsDate = new Date();
             } else {
                 completionDateField.disabled = true;
-                completionDateField.value = ''; // Reset to blank value if status changes
+                completionDateField.value = '';
             }
         });
 
-        // Handling the form submission
         document.getElementById('task-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Preventing default form submission
+            event.preventDefault();
 
-            // Here you can gather the values and save or process them as required
             const formData = {
                 date: this.date.value,
                 task: this.task.value,
@@ -111,7 +132,37 @@
                 completionDate: this.completionDate.value
             };
 
-            console.log('Form data:', formData);
+            // Saving to localStorage
+            const existingTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            existingTasks.push(formData);
+            localStorage.setItem('tasks', JSON.stringify(existingTasks));
+
+            // Adding data to the table
+            const tbody = document.getElementById('data-body');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${formData.date}</td>
+                <td>${formData.task}</td>
+                <td>${formData.description}</td>
+                <td>${formData.status}</td>
+                <td>${formData.completionDate}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // Loading data from localStorage
+        const existingTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        const tbody = document.getElementById('data-body');
+        existingTasks.forEach(task => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${task.date}</td>
+                <td>${task.task}</td>
+                <td>${task.description}</td>
+                <td>${task.status}</td>
+                <td>${task.completionDate}</td>
+            `;
+            tbody.appendChild(tr);
         });
     </script>
 </body>
