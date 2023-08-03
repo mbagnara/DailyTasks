@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Tasks Tracker</title>
+    <style>
+        .mandatory {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <form id="task-form">
+        <label>Date <span class="mandatory">*</span>:</label>
+        <input type="date" id="date" name="date" value="" required><br><br>
+        
+        <label>Task <span class="mandatory">*</span>:</label>
+        <input type="text" id="task" name="task" required><br><br>
+        
+        <label>Description <span class="mandatory">*</span>:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+        
+        <label>Status:</label>
+        <select id="status" name="status">
+            <option value="Not started">Not started</option>
+            <option value="WIP">WIP</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+        </select><br><br>
+        
+        <label>Completion Date:</label>
+        <input type="date" id="completionDate" name="completionDate" disabled required><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        // Set default value for date field
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Enable or disable the completion date based on status
+        document.getElementById('status').addEventListener('change', function() {
+            const status = this.value;
+            const completionDateField = document.getElementById('completionDate');
+
+            if (status === 'Completed') {
+                completionDateField.disabled = false;
+                completionDateField.valueAsDate = new Date(); // Set to today's date if status is 'Completed'
+            } else {
+                completionDateField.disabled = true;
+                completionDateField.value = ''; // Reset to blank value if status changes
+            }
+        });
+
+        // Handling the form submission
+        document.getElementById('task-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Preventing default form submission
+
+            // Here you can gather the values and save or process them as required
+            const formData = {
+                date: this.date.value,
+                task: this.task.value,
+                description: this.description.value,
+                status: this.status.value,
+                completionDate: this.completionDate.value
+            };
+
+            console.log('Form data:', formData);
+        });
+    </script>
+</body>
+</html>
