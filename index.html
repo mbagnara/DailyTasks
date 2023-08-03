@@ -5,21 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Tasks Tracker</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        #task-form {
+            background: #fff;
+            padding: 30px;
+            max-width: 600px;
+            margin: 40px auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
         .mandatory {
             color: red;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <form id="task-form">
         <label>Date <span class="mandatory">*</span>:</label>
-        <input type="date" id="date" name="date" value="" required><br><br>
+        <input type="date" id="date" name="date" required><br>
         
         <label>Task <span class="mandatory">*</span>:</label>
-        <input type="text" id="task" name="task" required><br><br>
+        <input type="text" id="task" name="task" required><br>
         
         <label>Description <span class="mandatory">*</span>:</label>
-        <textarea id="description" name="description" required></textarea><br><br>
+        <textarea id="description" name="description" required></textarea><br>
         
         <label>Status:</label>
         <select id="status" name="status">
@@ -27,10 +71,10 @@
             <option value="WIP">WIP</option>
             <option value="Completed">Completed</option>
             <option value="Cancelled">Cancelled</option>
-        </select><br><br>
+        </select><br>
         
         <label>Completion Date:</label>
-        <input type="date" id="completionDate" name="completionDate" disabled required><br><br>
+        <input type="date" id="completionDate" name="completionDate" disabled required><br>
         
         <input type="submit" value="Submit">
     </form>
