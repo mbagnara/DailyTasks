@@ -9,18 +9,18 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0 auto;
-            padding: 40px;
+            padding: 20px;
         }
         #task-form {
             background: #fff;
-            padding: 30px;
-            max-width: 600px;
-            margin: 40px auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            max-width: 300px; /* Half the previous width */
+            margin: 20px auto;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 4px; /* Half the previous margin */
             font-weight: bold;
         }
         input[type="text"],
@@ -28,13 +28,14 @@
         textarea,
         select {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 20px;
+            padding: 4px; /* Half the previous padding */
+            margin-bottom: 10px; /* Half the previous margin */
             border: 1px solid #ddd;
+            font-size: 12px; /* Smaller font size */
         }
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 50px; /* Half the previous min-height */
         }
         .mandatory {
             color: red;
@@ -42,12 +43,12 @@
         input[type="submit"] {
             display: block;
             width: 100%;
-            padding: 10px;
+            padding: 5px; /* Half the previous padding */
             background-color: #007BFF;
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 9px; /* Smaller font size */
         }
         input[type="submit"]:hover {
             background-color: #0056b3;
