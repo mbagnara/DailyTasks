@@ -16,14 +16,7 @@
             padding: 15px;
             max-width: 300px;
             margin: 20px auto;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-        #data-table {
-            background: #fff;
-            padding: 15px;
-            max-width: 600px;
-            margin: 20px auto;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
         label {
             display: block;
@@ -60,9 +53,25 @@
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
+		
+		
         table {
-            width: 100%;
+            width: 900px;
+            border-collapse: collapse;
+            margin: 20px auto;
+			background: #fff;
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th:nth-child(1), td:nth-child(1) { width: 80px; }
+        th:nth-child(2), td:nth-child(2) { width: 100px; }
+        th:nth-child(3), td:nth-child(3) { width: 400px; }
+        th:nth-child(4), td:nth-child(4) { width: 80px; }
+        th:nth-child(5), td:nth-child(5) { width: 80px; }
     </style>
 </head>
 <body>
@@ -89,42 +98,64 @@
         
         <input type="submit" value="Submit">
     </form>
-    
-    <div id="data-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Task</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Completion Date</th>
-                </tr>
-            </thead>
-            <tbody id="data-body"></tbody>
-        </table>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Task</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Completion Date</th>
+            </tr>
+        </thead>
+        <tbody id="data-body">
+        </tbody>
+    </table>
 
     <script>
+        // Set default value for date field
         document.getElementById('date').valueAsDate = new Date();
 
+        // Enable or disable the completion date based on status
         document.getElementById('status').addEventListener('change', function() {
             const status = this.value;
             const completionDateField = document.getElementById('completionDate');
 
             if (status === 'Completed') {
                 completionDateField.disabled = false;
-                completionDateField.valueAsDate = new Date();
+                completionDateField.valueAsDate = new Date(); // Set to today's date if status is 'Completed'
             } else {
                 completionDateField.disabled = true;
-                completionDateField.value = '';
+                completionDateField.value = ''; // Reset to blank value if status changes
             }
         });
 
-        document.getElementById('task-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        // Load tasks from localStorage and populate the table
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const dataBody = document.getElementById('data-body');
+            dataBody.innerHTML = ''; // Clear the table body
 
-            const formData = {
+            // Populate the table with tasks
+            tasks.forEach(function(task, index) {
+                const row = document.createElement('tr');
+
+                for (let prop in task) {
+                    const cell = document.createElement('td');
+                    cell.textContent = task[prop];
+                    row.appendChild(cell);
+                }
+
+                dataBody.appendChild(row);
+            });
+        }
+
+        // Handling the form submission
+        document.getElementById('task-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Preventing default form submission
+
+            // Gather the values and save them as an object in an array
+            const task = {
                 date: this.date.value,
                 task: this.task.value,
                 description: this.description.value,
@@ -132,38 +163,21 @@
                 completionDate: this.completionDate.value
             };
 
-            // Saving to localStorage
-            const existingTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            existingTasks.push(formData);
-            localStorage.setItem('tasks', JSON.stringify(existingTasks));
+            // Retrieve current tasks from localStorage, add the new task, and save them back
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.push(task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
 
-            // Adding data to the table
-            const tbody = document.getElementById('data-body');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${formData.date}</td>
-                <td>${formData.task}</td>
-                <td>${formData.description}</td>
-                <td>${formData.status}</td>
-                <td>${formData.completionDate}</td>
-            `;
-            tbody.appendChild(tr);
+            // Clear the form fields
+            this.reset();
+            document.getElementById('date').valueAsDate = new Date(); // Resetting date to the current date
+
+            // Reload tasks to reflect the changes
+            loadTasks();
         });
 
-        // Loading data from localStorage
-        const existingTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        const tbody = document.getElementById('data-body');
-        existingTasks.forEach(task => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${task.date}</td>
-                <td>${task.task}</td>
-                <td>${task.description}</td>
-                <td>${task.status}</td>
-                <td>${task.completionDate}</td>
-            `;
-            tbody.appendChild(tr);
-        });
+        // Load tasks when the page loads
+        loadTasks();
     </script>
 </body>
 </html>
